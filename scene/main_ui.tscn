@@ -93,7 +93,64 @@ offset_right = 1132.0
 offset_bottom = 635.0
 text = "添加服务器"
 
+[node name="AddServerSettings" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="CenterContainer" type="CenterContainer" parent="AddServerSettings"]
+custom_minimum_size = Vector2(300, 200)
+layout_mode = 0
+offset_left = 447.0
+offset_top = 209.0
+offset_right = 747.0
+offset_bottom = 409.0
+
+[node name="ColorRect2" type="ColorRect" parent="AddServerSettings/CenterContainer"]
+custom_minimum_size = Vector2(304, 200)
+layout_mode = 2
+color = Color(0, 0, 0, 1)
+
+[node name="ColorRect" type="ColorRect" parent="AddServerSettings/CenterContainer/ColorRect2"]
+custom_minimum_size = Vector2(295, 195)
+layout_mode = 2
+offset_left = 4.0
+offset_top = 2.0
+offset_right = 299.0
+offset_bottom = 197.0
+color = Color(0.305158, 0.740293, 0.909893, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="AddServerSettings/CenterContainer"]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="IP" type="LineEdit" parent="AddServerSettings/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+text = "   IP  ："
+
+[node name="PORT" type="LineEdit" parent="AddServerSettings/CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(150, 30)
+layout_mode = 2
+text = "端口："
+
+[node name="HBoxContainer" type="HBoxContainer" parent="AddServerSettings/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Create" type="Button" parent="AddServerSettings/CenterContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+text = "添加"
+
+[node name="Cancle" type="Button" parent="AddServerSettings/CenterContainer/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(75, 0)
+layout_mode = 2
+text = "取消"
+
 [connection signal="pressed" from="Main/VBoxContainer/ServerList" to="." method="_on_server_list_pressed"]
 [connection signal="pressed" from="Main/VBoxContainer/SetupSettings" to="." method="_on_setup_settings_pressed"]
 [connection signal="pressed" from="Main/VBoxContainer/ColorSettings" to="." method="_on_color_settings_pressed"]
 [connection signal="pressed" from="ServerList/AddServer" to="ServerList/ServerList" method="_on_add_server_pressed"]
+[connection signal="text_changed" from="AddServerSettings/CenterContainer/VBoxContainer/IP" to="ServerList/ServerList" method="_on_ip_text_changed"]
+[connection signal="pressed" from="AddServerSettings/CenterContainer/VBoxContainer/HBoxContainer/Create" to="ServerList/ServerList" method="_on_create_pressed"]
+[connection signal="pressed" from="AddServerSettings/CenterContainer/VBoxContainer/HBoxContainer/Cancle" to="ServerList/ServerList" method="_on_cancle_pressed"]
