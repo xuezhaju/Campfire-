@@ -1,0 +1,99 @@
+[gd_scene load_steps=3 format=3 uid="uid://d2sjgx566qaud"]
+
+[ext_resource type="Script" uid="uid://btfx11kdve23t" path="res://scene/main_ui.gd" id="1_xqdl1"]
+[ext_resource type="Script" uid="uid://dna4jxf3jgo4" path="res://scene/server_list.gd" id="2_yu3bt"]
+
+[node name="MainUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xqdl1")
+
+[node name="Background" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(1152, 648)
+layout_mode = 2
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.504905, 0.776476, 0.898474, 1)
+
+[node name="Main" type="CenterContainer" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ColorRect2" type="ColorRect" parent="Main"]
+custom_minimum_size = Vector2(160, 648)
+layout_mode = 2
+color = Color(0.331743, 0.637063, 0.76743, 1)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Main"]
+custom_minimum_size = Vector2(120, 648)
+layout_mode = 2
+theme_override_constants/separation = 80
+alignment = 1
+
+[node name="ServerList" type="Button" parent="Main/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "服务器列表
+"
+
+[node name="SetupSettings" type="Button" parent="Main/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "启动器设置
+"
+
+[node name="ColorSettings" type="Button" parent="Main/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "主题设置"
+
+[node name="Title" type="Label" parent="."]
+layout_mode = 2
+offset_left = 18.0
+offset_top = 45.0
+offset_right = 141.0
+offset_bottom = 91.0
+theme_override_font_sizes/font_size = 38
+text = "Campfire"
+
+[node name="ServerList" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="ServerList" type="CenterContainer" parent="ServerList"]
+custom_minimum_size = Vector2(850, 550)
+layout_mode = 0
+offset_left = 230.0
+offset_top = 50.0
+offset_right = 1080.0
+offset_bottom = 600.0
+script = ExtResource("2_yu3bt")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ServerList/ServerList"]
+layout_mode = 2
+
+[node name="RichTextLabel" type="RichTextLabel" parent="ServerList/ServerList/VBoxContainer"]
+custom_minimum_size = Vector2(750, 50)
+layout_mode = 2
+
+[node name="AddServer" type="Button" parent="ServerList"]
+layout_mode = 2
+offset_left = 1060.0
+offset_top = 607.0
+offset_right = 1132.0
+offset_bottom = 635.0
+text = "添加服务器"
+
+[connection signal="pressed" from="Main/VBoxContainer/ServerList" to="." method="_on_server_list_pressed"]
+[connection signal="pressed" from="Main/VBoxContainer/SetupSettings" to="." method="_on_setup_settings_pressed"]
+[connection signal="pressed" from="Main/VBoxContainer/ColorSettings" to="." method="_on_color_settings_pressed"]
+[connection signal="pressed" from="ServerList/AddServer" to="ServerList/ServerList" method="_on_add_server_pressed"]
