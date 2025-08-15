@@ -9,14 +9,18 @@ extends Control
 # 存储所有服务器及其UI元素
 var server_list: Array = []  # 每个元素是字典: {ip, port, label, query, timer}
 var ip_text := ""
-var port_text := "27015"
+var port_text := ""
+
+var save_path :String = "C:/Users/Campfire"
 
 func _ready():
 	port.text = "端口：" + port_text
+	load_servers()
 
 func _process(delta):
 	add_server_settings.visible = Global.is_create
 	add_server_settings.process_mode = Node.PROCESS_MODE_INHERIT if Global.is_create else Node.PROCESS_MODE_DISABLED
+	
 	
 	# 更新所有服务器的计时器
 	for server in server_list:
@@ -47,7 +51,7 @@ func _on_ip_text_changed(new_text: String):
 func _on_port_text_changed(new_text: String):
 	port_text = new_text.replace("端口：", "").strip_edges()
 	if port_text.is_empty():
-		port_text = "27015"
+		port_text = ""
 		port.text = "端口：" + port_text
 
 func _on_create_pressed():
@@ -76,10 +80,79 @@ func _on_create_pressed():
 	}
 	server_list.append(new_server)
 	
+	save_servers()  # 保存服务器列表
+	
 	# 重置表单
 	Global.is_create = false
 	ip.text = "   IP  ："
-	port.text = "端口：27015"
+	port.text = "端口："
+
+func save_servers():
+	var config = ConfigFile.new()
+
+	for i in range(server_list.size()):
+		var server = server_list[i]
+		config.set_value("server_%d" % i, "ip", server.ip)
+		config.set_value("server_%d" % i, "port", server.port)
+	
+	config.save(save_path)
+	print("服务器列表已保存")
+
+func load_servers():
+	var config = ConfigFile.new()
+	var err = config.load(save_path)
+
+	if err != OK:
+		print("没有找到保存的服务器列表或加载失败，错误代码: ", err)
+		return
+	
+	print("正在从 ", save_path, " 加载服务器列表...")
+	
+	# 清空现有列表（避免重复加载）
+	for server in server_list:
+		if is_instance_valid(server.label):
+			server.label.queue_free()
+	server_list.clear()
+	
+	# 获取所有服务器部分
+	var server_keys = config.get_sections()
+	server_keys.sort()  # 确保按顺序加载
+	
+	for key in server_keys:
+		var ip = config.get_value(key, "ip")
+		var port = config.get_value(key, "port")
+
+		print("加载服务器: ", ip, ":", port)
+
+		# 创建UI项
+		var label = create_line()
+		label.text = "[color=gray]加载中 %s:%s...[/color]" % [ip, port]
+
+		# 添加到服务器列表
+		var server = {
+			"ip": ip,
+			"port": port,
+			"label": label,
+			"query": null,
+			"timer": 0.0  # 立即触发查询
+		}
+		server_list.append(server)
+	
+	print("已加载 %d 个服务器" % server_list.size())
+
+func remove_server(ip: String, port: int):
+	for i in range(server_list.size() - 1, -1, -1):
+		var server = server_list[i]
+		if server.ip == ip and server.port == port:
+			if is_instance_valid(server.label):
+				server.label.queue_free()
+			if is_instance_valid(server.query):
+				server.query.queue_free()
+			server_list.remove_at(i)
+	
+	save_servers()  # 更新保存
+
+
 
 func create_line() -> RichTextLabel:
 	var rich_text_label = RichTextLabel.new()
@@ -130,3 +203,7 @@ func _on_server_query_failed(server: Dictionary):
 
 func _on_cancle_pressed():
 	Global.is_create = false
+
+
+func _on_f_5_pressed() -> void:
+	load_servers()
