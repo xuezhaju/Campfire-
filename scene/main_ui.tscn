@@ -152,5 +152,6 @@ text = "取消"
 [connection signal="pressed" from="Main/VBoxContainer/ColorSettings" to="." method="_on_color_settings_pressed"]
 [connection signal="pressed" from="ServerList/AddServer" to="ServerList/ServerList" method="_on_add_server_pressed"]
 [connection signal="text_changed" from="AddServerSettings/CenterContainer/VBoxContainer/IP" to="ServerList/ServerList" method="_on_ip_text_changed"]
+[connection signal="text_changed" from="AddServerSettings/CenterContainer/VBoxContainer/PORT" to="ServerList/ServerList" method="_on_port_text_changed"]
 [connection signal="pressed" from="AddServerSettings/CenterContainer/VBoxContainer/HBoxContainer/Create" to="ServerList/ServerList" method="_on_create_pressed"]
 [connection signal="pressed" from="AddServerSettings/CenterContainer/VBoxContainer/HBoxContainer/Cancle" to="ServerList/ServerList" method="_on_cancle_pressed"]
