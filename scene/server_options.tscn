@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://dr6yy2jhsrdtk"]
+
+[ext_resource type="Script" uid="uid://crftsj6btlv7d" path="res://scripts/server_options.gd" id="1_5yr0a"]
+
+[node name="PopupPanel" type="PopupPanel"]
+title = "请选择操作"
+initial_position = 1
+size = Vector2i(300, 200)
+visible = true
+borderless = false
+always_on_top = true
+min_size = Vector2i(300, 200)
+script = ExtResource("1_5yr0a")

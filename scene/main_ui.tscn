@@ -99,7 +99,7 @@ offset_left = 1060.0
 offset_top = 576.0
 offset_right = 1132.0
 offset_bottom = 604.0
-text = "刷新"
+text = "刷新(F5)"
 
 [node name="AddServerSettings" type="Control" parent="."]
 visible = false

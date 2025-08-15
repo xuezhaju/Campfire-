@@ -11,16 +11,49 @@ var server_list: Array = []  # 每个元素是字典: {ip, port, label, query, t
 var ip_text := ""
 var port_text := ""
 
+var server_options_scene = preload("res://scene/server_options.tscn") 
+var server_options_popup: PopupPanel
+
 var save_path :String = "C:/Users/Campfire"
 
 func _ready():
 	port.text = "端口：" + port_text
 	load_servers()
 
+	# 初始化服务器选项弹窗
+	server_options_popup = server_options_scene.instantiate()
+	add_child(server_options_popup)
+	server_options_popup.hide()
+
+	# 连接选项弹窗的信号
+	server_options_popup.connect("remove_server", _on_remove_server_requested)
+	server_options_popup.connect("refresh_server", _on_refresh_server_requested)
+	server_options_popup.move_to_top.connect(_on_move_to_top_requested)  # 新增这行
+
+func _on_server_label_clicked(server: Dictionary):
+	# 显示选项弹窗
+	server_options_popup.set_server_info(server.ip, server.port)
+	server_options_popup.popup_centered()
+
+func _on_remove_server_requested(ip: String, port: int):
+	remove_server(ip, port)
+	server_options_popup.hide()
+
+func _on_refresh_server_requested(ip: String, port: int):
+	for server in server_list:
+		if server.ip == ip and server.port == port:
+			_query_server(server)
+			break
+	server_options_popup.hide()
+
+
+
 func _process(delta):
 	add_server_settings.visible = Global.is_create
 	add_server_settings.process_mode = Node.PROCESS_MODE_INHERIT if Global.is_create else Node.PROCESS_MODE_DISABLED
 	
+	if Input.is_key_pressed(KEY_F5):
+		load_servers()
 	
 	# 更新所有服务器的计时器
 	for server in server_list:
@@ -167,6 +200,15 @@ func create_line() -> RichTextLabel:
 	style.set_content_margin_all(10)
 	rich_text_label.set("theme_override_styles/normal", style)
 	
+	# 添加点击检测
+	rich_text_label.gui_input.connect(func(event):
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			for server in server_list:
+				if server.label == rich_text_label:
+					_on_server_label_clicked(server)
+					break
+	)
+	
 	$VBoxContainer.add_child(rich_text_label)
 	return rich_text_label
 
@@ -206,4 +248,54 @@ func _on_cancle_pressed():
 
 
 func _on_f_5_pressed() -> void:
+	load_servers()
+
+# 在主脚本中添加以下代码：
+
+func _on_move_to_top_requested(ip: String, port: int):
+	# 读取当前配置文件
+	var config = ConfigFile.new()
+	var err = config.load("C:/Users/Campfire")
+	if err != OK:
+		print("无法加载服务器配置文件")
+		return
+
+	# 找出要置顶的服务器
+	var target_section = ""
+	var target_data = {}
+	var other_sections = []
+
+	# 收集所有服务器并找到目标服务器
+	for section in config.get_sections():
+		var server_ip = config.get_value(section, "ip")
+		var server_port = config.get_value(section, "port")
+
+		if server_ip == ip and server_port == port:
+			target_section = section
+			target_data = {"ip": server_ip, "port": server_port}
+		else:
+			other_sections.append({"section": section, "ip": server_ip, "port": server_port})
+
+	if target_section == "":
+		print("未找到要置顶的服务器")
+		return
+
+	# 重新排序服务器（目标服务器到顶部）
+	var new_config = ConfigFile.new()
+
+	# 添加目标服务器为第一个
+	new_config.set_value("server_0", "ip", target_data.ip)
+	new_config.set_value("server_0", "port", target_data.port)
+
+	# 添加其他服务器，重新编号
+	for i in range(other_sections.size()):
+		var server = other_sections[i]
+		new_config.set_value("server_%d" % (i + 1), "ip", server.ip)
+		new_config.set_value("server_%d" % (i + 1), "port", server.port)
+	
+	# 保存新配置
+	new_config.save("C:/Users/Campfire")
+	print("服务器已置顶")
+
+	# 重新加载服务器列表
 	load_servers()
