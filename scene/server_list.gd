@@ -14,7 +14,7 @@ var port_text := ""
 var server_options_scene = preload("res://scene/server_options.tscn") 
 var server_options_popup: PopupPanel
 
-var save_path :String = "C:/Users/Campfire"
+var save_path :String = "C://Users/Campfires/Campfire"
 
 func _ready():
 	port.text = "端口：" + port_text
@@ -45,8 +45,6 @@ func _on_refresh_server_requested(ip: String, port: int):
 			_query_server(server)
 			break
 	server_options_popup.hide()
-
-
 
 func _process(delta):
 	add_server_settings.visible = Global.is_create
@@ -255,7 +253,7 @@ func _on_f_5_pressed() -> void:
 func _on_move_to_top_requested(ip: String, port: int):
 	# 读取当前配置文件
 	var config = ConfigFile.new()
-	var err = config.load("C:/Users/Campfire")
+	var err = config.load("C://Users/Campfires/Campfire")
 	if err != OK:
 		print("无法加载服务器配置文件")
 		return
@@ -294,7 +292,7 @@ func _on_move_to_top_requested(ip: String, port: int):
 		new_config.set_value("server_%d" % (i + 1), "port", server.port)
 	
 	# 保存新配置
-	new_config.save("C:/Users/Campfire")
+	new_config.save("C://Users/Campfires/Campfire")
 	print("服务器已置顶")
 
 	# 重新加载服务器列表

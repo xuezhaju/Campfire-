@@ -4,7 +4,15 @@ extends Control
 @onready var setting: Control = $Setting
 @onready var background: ColorRect = $Background
 @onready var main_color: ColorRect = $Main/MainColor
+@onready var picture: TextureRect = $Picture
 
+func _ready() -> void:
+	if Global.back_picture_path == "":
+		picture.hide()
+		picture.process_mode = Node.PROCESS_MODE_DISABLED
+	else:
+		picture.show()
+		picture.process_mode = Node.PROCESS_MODE_INHERIT
 
 func _on_server_list_pressed() -> void:
 	Global.mainui_mode = "server_list"
@@ -30,6 +38,7 @@ func _process(delta: float) -> void:
 		setting.process_mode = Node.NOTIFICATION_DISABLED
 		
 	elif Global.mainui_mode == "settings":
+		Global.save_settings()
 		setting.show()
 		setting.process_mode = Node.PROCESS_MODE_INHERIT
 		# 确保控件在视图最前

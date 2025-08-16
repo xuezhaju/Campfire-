@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://d2sjgx566qaud"]
+[gd_scene load_steps=9 format=3 uid="uid://d2sjgx566qaud"]
 
 [ext_resource type="Script" uid="uid://btfx11kdve23t" path="res://scene/main_ui.gd" id="1_xqdl1"]
 [ext_resource type="Script" uid="uid://bydqjipe8tk7e" path="res://scripts/font_settings.gd" id="2_g4hc0"]
@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://bb5yrr5mqmuvo" path="res://scripts/back_color.gd" id="4_cwb1w"]
 [ext_resource type="Script" uid="uid://ch36dl6ck0a60" path="res://scripts/main_color.gd" id="5_i4ba5"]
 [ext_resource type="Script" uid="uid://clb2mof7ovm17" path="res://scripts/font_color.gd" id="6_niqgt"]
+[ext_resource type="Script" uid="uid://c02vk3mc5gweo" path="res://scripts/back_picture.gd" id="8_hjt2u"]
 
 [node name="MainUI" type="Control"]
 layout_mode = 3
@@ -23,6 +24,12 @@ layout_mode = 2
 offset_right = 1152.0
 offset_bottom = 648.0
 color = Color(0.504905, 0.776476, 0.898474, 1)
+
+[node name="Picture" type="TextureRect" parent="."]
+custom_minimum_size = Vector2(1152, 648)
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
 [node name="Main" type="CenterContainer" parent="."]
 layout_mode = 0
@@ -234,19 +241,29 @@ script = ExtResource("6_niqgt")
 
 [node name="PicturesSettings" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_constants/separation = 150
+theme_override_constants/separation = 220
 
 [node name="BackPicture" type="Label" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "启动器背景"
+script = ExtResource("8_hjt2u")
 
-[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings/BackPicture"]
+[node name="PictureLineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings/BackPicture"]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 0
 offset_left = 93.0
 offset_right = 146.0
 offset_bottom = 28.0
+
+[node name="Clear" type="Button" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings/BackPicture"]
+layout_mode = 0
+offset_left = 234.0
+offset_top = -3.0
+offset_right = 271.0
+offset_bottom = 28.0
+theme_override_font_sizes/font_size = 18
+text = "清除"
 
 [node name="Label" type="Label" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings"]
 layout_mode = 2
@@ -380,6 +397,13 @@ offset_bottom = 334.0
 theme_override_font_sizes/font_size = 15
 text = "———————————————————————————————————————————————————————————————"
 
+[node name="PictureSearch" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 1
+ok_button_text = "Open"
+cancel_button_text = "取消"
+file_mode = 0
+
 [connection signal="pressed" from="Main/VBoxContainer/ServerList" to="." method="_on_server_list_pressed"]
 [connection signal="pressed" from="Main/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
 [connection signal="pressed" from="Main/VBoxContainer/Abaot" to="." method="_on_abaot_pressed"]
@@ -389,3 +413,4 @@ text = "————————————————————————
 [connection signal="text_changed" from="AddServerSettings/CenterContainer/VBoxContainer/PORT" to="ServerList/ServerList" method="_on_port_text_changed"]
 [connection signal="pressed" from="AddServerSettings/CenterContainer/VBoxContainer/HBoxContainer/Create" to="ServerList/ServerList" method="_on_create_pressed"]
 [connection signal="pressed" from="AddServerSettings/CenterContainer/VBoxContainer/HBoxContainer/Cancle" to="ServerList/ServerList" method="_on_cancle_pressed"]
+[connection signal="pressed" from="Setting/CenterContainer/VBoxContainer/PicturesSettings/BackPicture/Clear" to="Setting/CenterContainer/VBoxContainer/PicturesSettings/BackPicture" method="_on_clear_pressed"]
