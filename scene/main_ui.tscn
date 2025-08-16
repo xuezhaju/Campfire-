@@ -1,8 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://d2sjgx566qaud"]
+[gd_scene load_steps=8 format=3 uid="uid://d2sjgx566qaud"]
 
 [ext_resource type="Script" uid="uid://btfx11kdve23t" path="res://scene/main_ui.gd" id="1_xqdl1"]
+[ext_resource type="Script" uid="uid://bydqjipe8tk7e" path="res://scripts/font_settings.gd" id="2_g4hc0"]
 [ext_resource type="Script" uid="uid://dna4jxf3jgo4" path="res://scene/server_list.gd" id="2_yu3bt"]
 [ext_resource type="Script" uid="uid://d4koj6er2dsue" path="res://scripts/setup_setting.gd" id="3_8pk1s"]
+[ext_resource type="Script" uid="uid://bb5yrr5mqmuvo" path="res://scripts/back_color.gd" id="4_cwb1w"]
+[ext_resource type="Script" uid="uid://ch36dl6ck0a60" path="res://scripts/main_color.gd" id="5_i4ba5"]
+[ext_resource type="Script" uid="uid://clb2mof7ovm17" path="res://scripts/font_color.gd" id="6_niqgt"]
 
 [node name="MainUI" type="Control"]
 layout_mode = 3
@@ -25,7 +29,7 @@ layout_mode = 0
 offset_right = 40.0
 offset_bottom = 40.0
 
-[node name="ColorRect2" type="ColorRect" parent="Main"]
+[node name="MainColor" type="ColorRect" parent="Main"]
 custom_minimum_size = Vector2(160, 648)
 layout_mode = 2
 color = Color(0.331743, 0.637063, 0.76743, 1)
@@ -64,6 +68,7 @@ offset_right = 141.0
 offset_bottom = 91.0
 theme_override_font_sizes/font_size = 38
 text = "Campfire"
+script = ExtResource("2_g4hc0")
 
 [node name="ServerList" type="Control" parent="."]
 anchors_preset = 0
@@ -175,7 +180,7 @@ offset_bottom = 512.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="Setting/CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 80
+theme_override_constants/separation = 60
 
 [node name="ColorSetings" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(600, 50)
@@ -187,7 +192,7 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "背景色"
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="Setting/CenterContainer/VBoxContainer/ColorSetings/BackColor"]
+[node name="BackColor" type="ColorPickerButton" parent="Setting/CenterContainer/VBoxContainer/ColorSetings/BackColor"]
 custom_minimum_size = Vector2(50, 25)
 layout_mode = 0
 offset_left = 69.0
@@ -195,13 +200,14 @@ offset_top = 2.0
 offset_right = 119.0
 offset_bottom = 27.0
 color = Color(0.505882, 0.776471, 0.898039, 1)
+script = ExtResource("4_cwb1w")
 
 [node name="MainColor" type="Label" parent="Setting/CenterContainer/VBoxContainer/ColorSetings"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "主题色"
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="Setting/CenterContainer/VBoxContainer/ColorSetings/MainColor"]
+[node name="MainColor" type="ColorPickerButton" parent="Setting/CenterContainer/VBoxContainer/ColorSetings/MainColor"]
 custom_minimum_size = Vector2(50, 25)
 layout_mode = 0
 offset_left = 69.0
@@ -209,13 +215,14 @@ offset_top = 2.0
 offset_right = 119.0
 offset_bottom = 27.0
 color = Color(0.333333, 0.635294, 0.768627, 1)
+script = ExtResource("5_i4ba5")
 
-[node name="MainColor2" type="Label" parent="Setting/CenterContainer/VBoxContainer/ColorSetings"]
+[node name="FontColor" type="Label" parent="Setting/CenterContainer/VBoxContainer/ColorSetings"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 25
 text = "字体颜色"
 
-[node name="ColorPickerButton" type="ColorPickerButton" parent="Setting/CenterContainer/VBoxContainer/ColorSetings/MainColor2"]
+[node name="FontColor" type="ColorPickerButton" parent="Setting/CenterContainer/VBoxContainer/ColorSetings/FontColor"]
 custom_minimum_size = Vector2(50, 25)
 layout_mode = 0
 offset_left = 85.0
@@ -223,18 +230,47 @@ offset_top = 2.0
 offset_right = 135.0
 offset_bottom = 27.0
 color = Color(0.996078, 1, 1, 1)
+script = ExtResource("6_niqgt")
+
+[node name="PicturesSettings" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 150
+
+[node name="BackPicture" type="Label" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "启动器背景"
+
+[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings/BackPicture"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 0
+offset_left = 93.0
+offset_right = 146.0
+offset_bottom = 28.0
+
+[node name="Label" type="Label" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "启动器背景音乐"
+
+[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings/Label"]
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 0
+offset_left = 132.0
+offset_right = 185.0
+offset_bottom = 28.0
 
 [node name="启动项设置" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(600, 50)
 layout_mode = 2
 theme_override_constants/separation = 155
 
-[node name="Label" type="Label" parent="Setting/CenterContainer/VBoxContainer/启动项设置"]
+[node name="启动器预设" type="Label" parent="Setting/CenterContainer/VBoxContainer/启动项设置"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "启动项预设"
 
-[node name="MenuButton" type="MenuButton" parent="Setting/CenterContainer/VBoxContainer/启动项设置/Label"]
+[node name="MenuButton" type="MenuButton" parent="Setting/CenterContainer/VBoxContainer/启动项设置/启动器预设"]
 custom_minimum_size = Vector2(150, 30)
 layout_mode = 0
 offset_left = 84.0
@@ -246,19 +282,19 @@ theme_override_colors/font_color = Color(0, 0, 0, 1)
 theme_override_font_sizes/font_size = 18
 text = "选择预设...."
 
-[node name="Label2" type="Label" parent="Setting/CenterContainer/VBoxContainer/启动项设置"]
+[node name="启动项" type="Label" parent="Setting/CenterContainer/VBoxContainer/启动项设置"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "启动项"
 
-[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/启动项设置/Label2"]
+[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/启动项设置/启动项"]
 custom_minimum_size = Vector2(150, 25)
 layout_mode = 0
 offset_left = 64.0
 offset_right = 164.0
 offset_bottom = 28.0
 
-[node name="Button" type="Button" parent="Setting/CenterContainer/VBoxContainer/启动项设置/Label2"]
+[node name="Button" type="Button" parent="Setting/CenterContainer/VBoxContainer/启动项设置/启动项"]
 layout_mode = 0
 offset_left = 227.0
 offset_right = 311.0
@@ -268,18 +304,79 @@ text = "保存为预设..."
 [node name="UserSettings" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(600, 50)
 layout_mode = 2
+theme_override_constants/separation = 125
 
 [node name="头像" type="Label" parent="Setting/CenterContainer/VBoxContainer/UserSettings"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
-text = "头像"
+text = "头像路径"
+
+[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/UserSettings/头像"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 0
+offset_left = 69.0
+offset_right = 147.0
+offset_bottom = 28.0
+
+[node name="username" type="Label" parent="Setting/CenterContainer/VBoxContainer/UserSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "游戏昵称"
+
+[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/UserSettings/username"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 0
+offset_left = 69.0
+offset_right = 169.0
+offset_bottom = 28.0
+
+[node name="tip" type="Label" parent="Setting/CenterContainer/VBoxContainer/UserSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "战队标签"
+
+[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/UserSettings/tip"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 0
+offset_left = 69.0
+offset_right = 169.0
+offset_bottom = 28.0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="CS_GO路径" type="Label" parent="Setting/CenterContainer/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "CS:GO路径"
+
+[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/HBoxContainer/CS_GO路径"]
+custom_minimum_size = Vector2(250, 0)
+layout_mode = 0
+offset_left = 80.0
+offset_right = 133.0
+offset_bottom = 28.0
+
+[node name="clear" type="Button" parent="Setting/CenterContainer/VBoxContainer/HBoxContainer/CS_GO路径"]
+layout_mode = 0
+offset_left = 400.0
+offset_right = 434.0
+offset_bottom = 28.0
+text = "清除"
+
+[node name="load" type="Button" parent="Setting/CenterContainer/VBoxContainer/HBoxContainer/CS_GO路径"]
+layout_mode = 0
+offset_left = 348.0
+offset_right = 382.0
+offset_bottom = 28.0
+text = "加载"
 
 [node name="分割线" type="Label" parent="Setting"]
 layout_mode = 2
 offset_left = 72.0
-offset_top = 344.0
+offset_top = 314.0
 offset_right = 828.0
-offset_bottom = 364.0
+offset_bottom = 334.0
 theme_override_font_sizes/font_size = 15
 text = "———————————————————————————————————————————————————————————————"
 

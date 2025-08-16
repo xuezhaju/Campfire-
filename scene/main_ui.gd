@@ -2,6 +2,8 @@ extends Control
 @onready var server_list: Control = $ServerList
 @onready var add_server_settings: Control = $AddServerSettings
 @onready var setting: Control = $Setting
+@onready var background: ColorRect = $Background
+@onready var main_color: ColorRect = $Main/MainColor
 
 
 func _on_server_list_pressed() -> void:
@@ -17,6 +19,7 @@ func _on_abaot_pressed() -> void:
 	Global.mainui_mode = "abaot"
 
 func _process(delta: float) -> void:
+	change_color()
 	if Global.mainui_mode == "server_list":
 		server_list.show()
 		server_list.process_mode = Node.PROCESS_MODE_INHERIT
@@ -43,3 +46,7 @@ func _process(delta: float) -> void:
 		server_list.process_mode = Node.PROCESS_MODE_DISABLED
 		add_server_settings.hide()
 		add_server_settings.process_mode = Node.PROCESS_MODE_DISABLED
+
+func change_color():
+	background.color = Global.back_color
+	main_color.color = Global.main_color
