@@ -33,7 +33,7 @@ func _ready():
 	
 	# 加入服务器按钮
 	var join_btn = Button.new()
-	join_btn.text = "加入服务器（有BUG别用）"
+	join_btn.text = "加入服务器"
 	join_btn.custom_minimum_size = Vector2(200, 40)
 	join_btn.add_theme_stylebox_override("normal", btn_style)
 	join_btn.pressed.connect(_on_join_button_pressed)
@@ -91,6 +91,7 @@ func _on_join_button_pressed():
 	# 修改rev.ini文件
 	modify_rev_ini(current_ip, current_port)
 	# 这里可以添加启动CSGO的代码
+	launch_csgo()
 	hide()
 
 func modify_rev_ini(ip: String, port: int):
@@ -138,40 +139,14 @@ func modify_rev_ini(ip: String, port: int):
 	else:
 		printerr("无法打开rev.ini文件进行修改")
 
-func _fallback_ahk_method(cmd: String):
-	var ahk_script = """
-	; 通过进程ID精准激活窗口
-	Process, Exist, csgo.exe
-	if (ErrorLevel) {
-		WinActivate, ahk_pid %ErrorLevel%
-		WinWaitActive, ahk_pid %ErrorLevel%,, 3
-		if (!ErrorLevel) {
-			Send ~
-			Sleep 300
-			Send ^v
-			Sleep 200
-			Send {Enter}
-		}
-	}
-	"""
-	
-	var temp_file = "user://csgo_connect.ahk"
-	var file = FileAccess.open(temp_file, FileAccess.WRITE)
-	file.store_string(ahk_script)
-	file.close()
 
-	var ahk_path = _find_ahk_path()
-	if ahk_path:
-		OS.execute(ahk_path, [ProjectSettings.globalize_path(temp_file)])
+func launch_csgo():
+	var csgo_path = Global.csgo_path + "/revLoader.exe"
+	print(csgo_path)
 
-func _find_ahk_path() -> String:
-	var paths = [
-		"C:\\Program Files\\AutoHotkey\\AutoHotkey.exe",
-		"C:\\Program Files (x86)\\AutoHotkey\\AutoHotkey.exe",
-		OS.get_environment("LOCALAPPDATA") + "\\Programs\\AutoHotkey\\AutoHotkey.exe"
-	]
-	for path in paths:
-		if FileAccess.file_exists(path):
-			return path
-	printerr("AutoHotkey未安装")
-	return ""
+	# 检查文件是否存在
+	if FileAccess.file_exists(csgo_path):
+		OS.execute(csgo_path, [], [], false)
+	else:
+		print("找不到CSGO可执行文件")
+		return false
