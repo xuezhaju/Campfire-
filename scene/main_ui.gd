@@ -5,8 +5,14 @@ extends Control
 @onready var background: ColorRect = $Background
 @onready var main_color: ColorRect = $Main/MainColor
 @onready var picture: TextureRect = $Picture
+@onready var audio_stream_player: AudioStreamPlayer = $AudioStreamPlayer
 
 func _ready() -> void:
+	if Global.music_path != "":
+		audio_stream_player.play()
+	else :
+		audio_stream_player.stop()
+	
 	if Global.back_picture_path == "":
 		picture.hide()
 		picture.process_mode = Node.PROCESS_MODE_DISABLED

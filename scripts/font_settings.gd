@@ -7,7 +7,7 @@ extends Label
 	$"../Setting/CenterContainer/VBoxContainer/ColorSetings/MainColor",
 	$"../Setting/CenterContainer/VBoxContainer/ColorSetings/FontColor",
 	$"../Setting/CenterContainer/VBoxContainer/PicturesSettings/BackPicture",
-	$"../Setting/CenterContainer/VBoxContainer/PicturesSettings/Label",
+	$"../Setting/CenterContainer/VBoxContainer/PicturesSettings/Music",
 	$"../Setting/CenterContainer/VBoxContainer/启动项设置/启动器预设",
 	$"../Setting/CenterContainer/VBoxContainer/启动项设置/启动项",
 	$"../Setting/CenterContainer/VBoxContainer/UserSettings/头像",

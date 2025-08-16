@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://d2sjgx566qaud"]
+[gd_scene load_steps=10 format=3 uid="uid://d2sjgx566qaud"]
 
 [ext_resource type="Script" uid="uid://btfx11kdve23t" path="res://scene/main_ui.gd" id="1_xqdl1"]
 [ext_resource type="Script" uid="uid://bydqjipe8tk7e" path="res://scripts/font_settings.gd" id="2_g4hc0"]
@@ -8,6 +8,7 @@
 [ext_resource type="Script" uid="uid://ch36dl6ck0a60" path="res://scripts/main_color.gd" id="5_i4ba5"]
 [ext_resource type="Script" uid="uid://clb2mof7ovm17" path="res://scripts/font_color.gd" id="6_niqgt"]
 [ext_resource type="Script" uid="uid://c02vk3mc5gweo" path="res://scripts/back_picture.gd" id="8_hjt2u"]
+[ext_resource type="Script" uid="uid://hxat6no8uaoa" path="res://scripts/music.gd" id="9_eib71"]
 
 [node name="MainUI" type="Control"]
 layout_mode = 3
@@ -265,17 +266,27 @@ offset_bottom = 28.0
 theme_override_font_sizes/font_size = 18
 text = "清除"
 
-[node name="Label" type="Label" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings"]
+[node name="Music" type="Label" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
 text = "启动器背景音乐"
+script = ExtResource("9_eib71")
 
-[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings/Label"]
+[node name="MusicLineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings/Music"]
 custom_minimum_size = Vector2(120, 0)
 layout_mode = 0
 offset_left = 132.0
 offset_right = 185.0
 offset_bottom = 28.0
+
+[node name="Button" type="Button" parent="Setting/CenterContainer/VBoxContainer/PicturesSettings/Music"]
+layout_mode = 0
+offset_left = 270.0
+offset_top = -3.0
+offset_right = 307.0
+offset_bottom = 28.0
+theme_override_font_sizes/font_size = 18
+text = "清除"
 
 [node name="启动项设置" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(600, 50)
@@ -403,6 +414,16 @@ initial_position = 1
 ok_button_text = "Open"
 cancel_button_text = "取消"
 file_mode = 0
+
+[node name="MusicSearch" type="FileDialog" parent="."]
+title = "Open a File"
+initial_position = 1
+ok_button_text = "Open"
+cancel_button_text = "取消"
+file_mode = 0
+access = 2
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 
 [connection signal="pressed" from="Main/VBoxContainer/ServerList" to="." method="_on_server_list_pressed"]
 [connection signal="pressed" from="Main/VBoxContainer/Settings" to="." method="_on_settings_pressed"]

@@ -7,6 +7,7 @@ var back_color := Color(0.506, 0.776, 0.898)
 var main_color := Color(0.333, 0.635, 0.769)
 
 var settings_save_path := "C://Users/Campfires/CampfireSettings"
+var music_path :String = ""
 
 signal settings_changed
 
@@ -36,6 +37,7 @@ func save_settings():
 	config.set_value("Settings", "main_color", Global.main_color)
 	config.set_value("Settings", "font_color", Global.font_color)
 	config.set_value("Settings", "back_picture_path", Global.back_picture_path)
+	config.set_value("Settings", "music_path", Global.music_path)
 
 	# 保存到用户目录
 	var err = config.save(settings_save_path)
@@ -63,6 +65,7 @@ func load_settings():
 		main_color = config.get_value("Settings", "main_color", Color(0.333, 0.635, 0.769))
 		font_color = config.get_value("Settings", "font_color", Color(0.996, 1.0, 1.0))
 		back_picture_path = config.get_value("Settings", "back_picture_path", "")
+		music_path = config.get_value("Settings", "music_path", "")
 
 
 func create_folder(path: String):
