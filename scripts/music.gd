@@ -1,7 +1,7 @@
 extends Label
 
 @onready var music_line_edit: LineEdit = $MusicLineEdit
-@onready var button: Button = $Button
+@onready var clear: Button = $Clear
 @onready var music_search: FileDialog = $"../../../../../MusicSearch"
 @onready var audio_stream_player: AudioStreamPlayer = $"../../../../../AudioStreamPlayer"
 
@@ -14,15 +14,11 @@ func _ready():
 	# 连接信号
 	music_line_edit.gui_input.connect(_on_music_line_edit_gui_input)
 	music_search.file_selected.connect(_on_file_selected)
-	button.pressed.connect(_on_button_pressed)
 
 func _on_music_line_edit_gui_input(event: InputEvent):
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		music_search.popup_centered()
 
-func _on_button_pressed():
-	# 保留按钮功能，但可以隐藏按钮如果不需要
-	music_search.popup_centered()
 
 func _on_file_selected(path: String):
 	# 保存路径到全局变量
@@ -50,3 +46,11 @@ func load_and_play_music(path: String):
 			push_error("Failed to load audio file")
 	else:
 		push_error("File not found: " + path)
+
+
+func _on_clear_pressed() -> void:
+	audio_stream_player.stop()
+	Global.music_path = ""
+	Global.save_settings()
+	Global.load_settings()
+	music_line_edit.text = Global.music_path

@@ -88,43 +88,55 @@ func _on_copy_button_pressed():
 	print("已复制连接指令到剪贴板: ", connect_cmd)
 
 func _on_join_button_pressed():
-	var connect_cmd = "connect %s:%d" % [current_ip, current_port]
-	DisplayServer.clipboard_set(connect_cmd)  # 先复制到剪贴板
+	# 修改rev.ini文件
+	modify_rev_ini(current_ip, current_port)
+	# 这里可以添加启动CSGO的代码
+	hide()
 
-	# 方法1：使用PowerShell直接激活窗口
-	var ps_script = """
-	Add-Type -AssemblyName System.Windows.Forms
-	$csgo = Get-Process csgo -ErrorAction SilentlyContinue
-	if ($csgo) {
-		[System.Windows.Forms.SendKeys]::SendWait("%{TAB}")  # Alt+Tab切换
-		Start-Sleep -Milliseconds 500
-		[System.Windows.Forms.SendKeys]::SendWait("~")       # 打开控制台
-		Start-Sleep -Milliseconds 300
-		[System.Windows.Forms.SendKeys]::SendWait("^v")      # 粘贴
-		Start-Sleep -Milliseconds 200
-		[System.Windows.Forms.SendKeys]::SendWait("{ENTER}") # 执行
-	} else {
-		Write-Output "CS:GO进程未找到"
-	}
-	"""
-
-	# 写入临时PS1文件
-	var temp_file = "user://csgo_connect.ps1"
-	var file = FileAccess.open(temp_file, FileAccess.WRITE)
-	file.store_string(ps_script)
-	file.close()
-
-	# 执行PowerShell脚本
-	var output = []
-	var exit_code = OS.execute("powershell", [
-		"-ExecutionPolicy", "Bypass",
-		"-File", ProjectSettings.globalize_path(temp_file)
-	], output, true)
-
-	if exit_code != 0:
-		printerr("执行失败: ", output)
-		# 方法2：备用AHK方案
-		_fallback_ahk_method(connect_cmd)
+func modify_rev_ini(ip: String, port: int):
+	var rev_ini_path = "D:/Counter-Strike Global Offensive/rev.ini"
+	var temp_path = rev_ini_path + ".tmp"
+	var input_file = FileAccess.open(rev_ini_path, FileAccess.READ)
+	var output_file = FileAccess.open(temp_path, FileAccess.WRITE)
+	
+	if input_file and output_file:
+		var current_line = 1
+		var proc_line_found = false
+		
+		while not input_file.eof_reached():
+			var line = input_file.get_line()
+			
+			# 处理第二行（ProcName行）
+			if current_line == 2 and line.begins_with("ProcName="):
+				# 检查是否已经包含connect参数
+				if "+connect" in line:
+					# 替换现有的connect参数
+					var parts = line.split("+connect")
+					line = parts[0] + "+connect %s:%d" % [ip, port]
+				else:
+					# 添加connect参数
+					line = line + " +connect %s:%d" % [ip, port]
+				proc_line_found = true
+			
+			output_file.store_line(line)
+			current_line += 1
+		
+		input_file.close()
+		output_file.close()
+		
+		# 替换原文件
+		var dir = DirAccess.open("D:/Counter-Strike Global Offensive/")
+		if dir:
+			dir.remove("rev.ini")
+			dir.rename("rev.ini.tmp", "rev.ini")
+			print("成功修改rev.ini文件")
+		else:
+			printerr("无法重命名文件")
+		
+		if not proc_line_found:
+			printerr("警告：未找到ProcName行，可能未成功添加连接参数")
+	else:
+		printerr("无法打开rev.ini文件进行修改")
 
 func _fallback_ahk_method(cmd: String):
 	var ahk_script = """
@@ -139,7 +151,7 @@ func _fallback_ahk_method(cmd: String):
 			Send ^v
 			Sleep 200
 			Send {Enter}
-	}
+		}
 	}
 	"""
 	
