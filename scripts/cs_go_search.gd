@@ -108,17 +108,24 @@ func _exit_tree():
 		search_thread.wait_to_finish()
 
 func restart_application():
-	var executable = OS.get_executable_path()
-	var args = OS.get_cmdline_args()
+	# 获取当前可执行文件路径
+	var executable_path = OS.get_executable_path()
 
-	# 正确调用方式（第三个参数必须是数组）
-	var output = []
-	var exit_code = OS.execute(executable, args, output)  # output 是必须的数组参数
+	# 在 Windows 上需要处理路径中的反斜杠
+	if OS.get_name() == "Windows":
+		executable_path = executable_path.replace("/", "\\")
 
-	if exit_code != OK:
-		push_error("重启失败，错误码：%d" % exit_code)
-		return
+	# 创建新进程
+	var args = []
+	if OS.has_feature("editor"):
+		# 如果在编辑器中运行，使用项目主场景
+		args = ["--path", ProjectSettings.globalize_path("res://"), "res://scene/main_ui.tscn"]
+		OS.create_process(OS.get_executable_path(), args, false)
+	else:
+	# 在导出版本中运行
+		OS.create_process(executable_path, args, false)
 
+	# 退出当前实例
 	get_tree().quit()
 
 func _on_clear_pressed() -> void:
