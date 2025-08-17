@@ -13,12 +13,20 @@ config_version=5
 config/name="篝火启动器"
 run/main_scene="uid://d2sjgx566qaud"
 config/features=PackedStringArray("4.4", "Forward Plus")
+boot_splash/image="uid://c7pjkbt753chk"
 config/icon="res://icon.svg"
+config/windows_native_icon="res://asset/Campfire.ico"
 
 [autoload]
 
 Global="*res://scripts/Global.gd"
 Server="*res://scripts/Server.gd"
+
+[display]
+
+window/size/transparent=true
+window/stretch/mode="canvas_items"
+window/per_pixel_transparency/allowed=true
 
 [gui]
 
