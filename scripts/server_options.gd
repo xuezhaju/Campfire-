@@ -118,24 +118,34 @@ func modify_rev_ini(ip: String, port: int):
 	timer.wait_time = 30.0
 	timer.one_shot = true
 	timer.timeout.connect(func():
-		# 在后台线程执行文件修改
-		_thread_safe_modify(rev_ini_path, temp_path, func(line: String, current_line: int):
+		# 创建并启动线程
+		var thread = Thread.new()
+		if thread.start(_thread_safe_modify.bind(rev_ini_path, temp_path, func(line: String, current_line: int):
 			if current_line == 2 and line.begins_with("ProcName=") and "+connect" in line:
 				return line.split("+connect")[0].strip_edges()
 			return line
+		)) != OK:
+			printerr("无法启动线程")
+			return
+		
+		# 在主线程中定期检查线程状态
+		var check_thread_timer = Timer.new()
+		check_thread_timer.wait_time = 0.1
+		check_thread_timer.timeout.connect(func():
+			if not thread.is_alive():
+				thread.wait_to_finish()
+				check_thread_timer.queue_free()
+				timer.queue_free()
 		)
-		timer.queue_free()
+		add_child(check_thread_timer)
+		check_thread_timer.start()
 	)
 	add_child(timer)
 	timer.start()
 
-# 线程安全的文件修改
+# 线程安全的文件修改（现在作为线程目标函数）
 func _thread_safe_modify(path: String, temp_path: String, modifier: Callable):
-	var thread = Thread.new()
-	thread.start(func():
-		_modify_file(path, temp_path, modifier)
-		thread.wait_to_finish()
-	)
+	_modify_file(path, temp_path, modifier)
 
 # 通用文件修改函数
 func _modify_file(path: String, temp_path: String, modifier: Callable) -> bool:

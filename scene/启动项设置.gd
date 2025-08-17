@@ -14,32 +14,6 @@ func _ready():
 	
 	# 加载现有预设列表
 	_load_presets()
-	
-	# 初始化时显示当前rev.ini的Loader内容
-	_display_current_loader()
-
-# 显示当前rev.ini的Loader内容
-func _display_current_loader():
-	var rev_ini = _read_rev_ini()
-	if rev_ini != "":
-		var loader_value = _get_loader_value(rev_ini)
-		if loader_value != "":
-			line_edit.text = loader_value
-
-# 获取当前Loader值
-func _get_loader_value(content: String) -> String:
-	var lines = content.split("\n")
-	var in_loader_section = false
-	
-	for line in lines:
-		if line.begins_with("[Loader]"):
-			in_loader_section = true
-		elif in_loader_section and line.begins_with("ProcName="):
-			return line.trim_prefix("ProcName=")
-		elif line.begins_with("[") and line != "[Loader]":
-			in_loader_section = false
-	
-	return ""
 
 # 保存按钮按下时的处理
 func _on_save_pressed():
@@ -48,19 +22,43 @@ func _on_save_pressed():
 		print("输入为空")
 		return
 	
-	# 读取当前rev.ini内容
 	var rev_ini = _read_rev_ini()
 	if rev_ini == "":
 		print("无法读取rev.ini文件")
 		return
 	
-	# 更新Loader部分
-	rev_ini = _update_loader_section(rev_ini, input_text)
-	
-	# 保存到本地
+	rev_ini = _append_to_procname(rev_ini, input_text)
 	_save_rev_ini(rev_ini)
 	
 	print("保存成功")
+	line_edit.text = ""
+	
+	
+func _append_to_procname(content: String, new_value: String) -> String:
+	var lines = content.split("\n")
+	var new_lines = []
+	var in_loader_section = false
+	
+	for line in lines:
+		if line.begins_with("[Loader]"):
+			in_loader_section = true
+			new_lines.append(line)
+		elif in_loader_section and line.begins_with("ProcName="):
+			# 在现有ProcName后追加新内容
+			new_lines.append(line + " " + new_value)
+		elif line.begins_with("[") and line != "[Loader]":
+			in_loader_section = false
+			new_lines.append(line)
+		else:
+			new_lines.append(line)
+	
+	# 如果没有找到Loader部分，则创建并添加
+	if not "[Loader]" in content:
+		new_lines.append("[Loader]")
+		new_lines.append("ProcName=" + new_value)
+	
+	return "\n".join(new_lines)
+
 
 # 选择预设时的处理
 func _on_preset_selected(id):
@@ -73,8 +71,6 @@ func _on_preset_selected(id):
 	if FileAccess.file_exists(preset_path):
 		var preset_content = FileAccess.get_file_as_string(preset_path)
 		_save_rev_ini(preset_content)
-		# 更新LineEdit显示
-		line_edit.text = _get_loader_value(preset_content)
 		print("已加载预设: " + preset_name)
 	else:
 		print("预设文件不存在: " + preset_path)
@@ -107,10 +103,6 @@ func _update_loader_section(content: String, new_value: String) -> String:
 			continue
 		elif line.begins_with("[") and line != "[Loader]":
 			in_loader_section = false
-			# 如果之前没有添加ProcName，现在添加
-			if not procname_added:
-				new_lines.append("ProcName=" + new_value)
-				procname_added = true
 			new_lines.append(line)
 		else:
 			new_lines.append(line)
@@ -124,7 +116,6 @@ func _update_loader_section(content: String, new_value: String) -> String:
 
 # 保存rev.ini文件
 func _save_rev_ini(content: String):
-	# 保存到本地
 	var file = FileAccess.open(Global.rev_ini, FileAccess.WRITE)
 	if file == null:
 		print("无法保存rev.ini文件")
