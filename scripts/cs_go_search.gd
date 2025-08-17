@@ -5,6 +5,7 @@ extends Label
 # 添加一个变量存储搜索结果
 var search_results := []
 var search_thread: Thread
+var should_restart := false  # 添加重启标志
 
 func _ready():
 	line_edit.text = Global.csgo_path
@@ -31,6 +32,7 @@ func start_search(folder_name: String, start_path: String):
 	# 清空之前的结果
 	search_results.clear()
 	line_edit.text = "正在搜索 %s..." % folder_name
+	should_restart = true  # 设置重启标志
 	
 	# 如果已有搜索线程在运行，先等待它结束
 	if search_thread and search_thread.is_started():
@@ -57,11 +59,17 @@ func _on_search_completed():
 		if Global:
 			Global.csgo_path = search_results[0]
 			print("已设置Global.csgo_path为: ", Global.csgo_path)
+			Global.save_settings()  # 保存设置
 	else:
 		line_edit.text = "未找到Counter-Strike Global Offensive文件夹"
 		# 如果没找到，可以清空全局变量
 		if Global:
 			Global.csgo_path = ""
+	
+	# 如果需要重启且找到了路径
+	if should_restart and search_results.size() > 0:
+		await get_tree().create_timer(1.0).timeout  # 延迟1秒让用户看到结果
+		restart_application()
 
 func find_folder(folder_name: String, start_path: String) -> Array:
 	var found_paths := []
@@ -99,9 +107,23 @@ func _exit_tree():
 	if search_thread and search_thread.is_started():
 		search_thread.wait_to_finish()
 
+func restart_application():
+	var executable = OS.get_executable_path()
+	var args = OS.get_cmdline_args()
+
+	# 正确调用方式（第三个参数必须是数组）
+	var output = []
+	var exit_code = OS.execute(executable, args, output)  # output 是必须的数组参数
+
+	if exit_code != OK:
+		push_error("重启失败，错误码：%d" % exit_code)
+		return
+
+	get_tree().quit()
 
 func _on_clear_pressed() -> void:
 	Global.csgo_path = ""
 	Global.save_settings()
 	Global.load_settings()
 	line_edit.text = ""
+	restart_application()

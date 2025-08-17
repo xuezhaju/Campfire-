@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://d2sjgx566qaud"]
+[gd_scene load_steps=12 format=3 uid="uid://d2sjgx566qaud"]
 
 [ext_resource type="Script" uid="uid://btfx11kdve23t" path="res://scene/main_ui.gd" id="1_xqdl1"]
 [ext_resource type="Script" uid="uid://bydqjipe8tk7e" path="res://scripts/font_settings.gd" id="2_g4hc0"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://clb2mof7ovm17" path="res://scripts/font_color.gd" id="6_niqgt"]
 [ext_resource type="Script" uid="uid://c02vk3mc5gweo" path="res://scripts/back_picture.gd" id="8_hjt2u"]
 [ext_resource type="Script" uid="uid://hxat6no8uaoa" path="res://scripts/music.gd" id="9_eib71"]
+[ext_resource type="Script" uid="uid://2bqhj36e5da5" path="res://scripts/user_settings.gd" id="10_17wiq"]
 [ext_resource type="Script" uid="uid://v4kv8svevl1l" path="res://scripts/cs_go_search.gd" id="10_pdx0a"]
 
 [node name="MainUI" type="Control"]
@@ -333,26 +334,15 @@ text = "保存为预设..."
 [node name="UserSettings" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(600, 50)
 layout_mode = 2
-theme_override_constants/separation = 125
-
-[node name="头像" type="Label" parent="Setting/CenterContainer/VBoxContainer/UserSettings"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "头像路径"
-
-[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/UserSettings/头像"]
-custom_minimum_size = Vector2(100, 0)
-layout_mode = 0
-offset_left = 69.0
-offset_right = 147.0
-offset_bottom = 28.0
+theme_override_constants/separation = 140
+script = ExtResource("10_17wiq")
 
 [node name="username" type="Label" parent="Setting/CenterContainer/VBoxContainer/UserSettings"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "游戏昵称"
 
-[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/UserSettings/username"]
+[node name="usernameEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/UserSettings/username"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 0
 offset_left = 69.0
@@ -364,11 +354,23 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 20
 text = "战队标签"
 
-[node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/UserSettings/tip"]
+[node name="TipEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/UserSettings/tip"]
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 0
 offset_left = 69.0
 offset_right = 169.0
+offset_bottom = 28.0
+
+[node name="Language" type="Label" parent="Setting/CenterContainer/VBoxContainer/UserSettings"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "语言"
+
+[node name="LanguageEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/UserSettings/Language"]
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 0
+offset_left = 41.0
+offset_right = 141.0
 offset_bottom = 28.0
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
@@ -453,3 +455,4 @@ access = 2
 [connection signal="pressed" from="Setting/CenterContainer/VBoxContainer/PicturesSettings/BackPicture/Clear" to="Setting/CenterContainer/VBoxContainer/PicturesSettings/BackPicture" method="_on_clear_pressed"]
 [connection signal="pressed" from="Setting/CenterContainer/VBoxContainer/PicturesSettings/Music/Clear" to="Setting/CenterContainer/VBoxContainer/PicturesSettings/Music" method="_on_clear_pressed"]
 [connection signal="pressed" from="Setting/CenterContainer/VBoxContainer/HBoxContainer/CS_GO路径/clear" to="Setting/CenterContainer/VBoxContainer/HBoxContainer/CS_GO路径" method="_on_clear_pressed"]
+[connection signal="pressed" from="Setting/CenterContainer/VBoxContainer/HBoxContainer/CS_GO路径/load" to="Setting/CenterContainer/VBoxContainer/HBoxContainer/CS_GO路径" method="_on_load_pressed"]

@@ -7,8 +7,13 @@ var back_color := Color(0.506, 0.776, 0.898)
 var main_color := Color(0.333, 0.635, 0.769)
 
 var settings_save_path :String = "C://Users/Campfires/CampfireSettings"
+var rev_ini :String = ""
 var csgo_path :String = ""
 var music_path :String = ""
+
+var username :String = "CampfireUser"
+var teamtip : String = "Campfire"
+var language :String = "sChinese"
 
 var search_path :String = ""
 
@@ -42,6 +47,7 @@ func save_settings():
 	config.set_value("Settings", "back_picture_path", Global.back_picture_path)
 	config.set_value("Settings", "music_path", Global.music_path)
 	config.set_value("Settings", "csgo_path", Global.csgo_path)
+	config.set_value("Settings", "rev_ini", Global.rev_ini)
 
 	# 保存到用户目录
 	var err = config.save(settings_save_path)
@@ -71,6 +77,7 @@ func load_settings():
 		back_picture_path = config.get_value("Settings", "back_picture_path", "")
 		music_path = config.get_value("Settings", "music_path", "")
 		csgo_path = config.get_value("Settings", "csgo_path", "")
+		rev_ini = config.get_value("Settings", "rev_ini", "")
 
 
 func create_folder(path: String):
@@ -98,7 +105,12 @@ func folder():
 		print("目标目录存在！")
 	else:
 		create_folder("C://Users/Campfires")
+		
 
 func _ready() -> void:
 	load_settings()
 	folder()
+	
+	if csgo_path != "":
+		rev_ini = str(csgo_path + "/rev.ini")
+		print(rev_ini)
