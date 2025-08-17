@@ -22,6 +22,7 @@ func _ready():
 
 [font_size=18][b]📌 获取方式[/b][/font_size]
 B站关注@学渣驹
+GitHub:https://github.com/xuezhaju/Campfire-
 QQ群：1059519859
 
 [font_size=16][b]❓ 常见问题[/b][/font_size]
