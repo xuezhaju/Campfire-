@@ -95,3 +95,17 @@ func _update_ui():
 func change_color():
 	background.color = Global.back_color
 	main_color.color = Global.main_color
+
+func launch_csgo():
+	var csgo_path = Global.csgo_path + "/revLoader.exe"
+
+	# 检查文件是否存在
+	if FileAccess.file_exists(csgo_path):
+		OS.execute(csgo_path, [], [], false)
+	else:
+		print("找不到CSGO可执行文件")
+		return false
+		
+
+func _on_start_pressed() -> void:
+	launch_csgo()

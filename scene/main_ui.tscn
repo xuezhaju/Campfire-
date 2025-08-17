@@ -49,7 +49,7 @@ color = Color(0.331743, 0.637063, 0.76743, 1)
 [node name="VBoxContainer" type="VBoxContainer" parent="Main"]
 custom_minimum_size = Vector2(120, 648)
 layout_mode = 2
-theme_override_constants/separation = 80
+theme_override_constants/separation = 60
 alignment = 1
 
 [node name="ServerList" type="Button" parent="Main/VBoxContainer"]
@@ -65,6 +65,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 18
 text = "设置
 "
+
+[node name="Start" type="Button" parent="Main/VBoxContainer"]
+custom_minimum_size = Vector2(0, 40)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "启动CSGO"
 
 [node name="About" type="Button" parent="Main/VBoxContainer"]
 custom_minimum_size = Vector2(0, 40)
@@ -293,27 +299,10 @@ theme_override_font_sizes/font_size = 18
 text = "清除"
 
 [node name="启动项设置" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(600, 50)
+custom_minimum_size = Vector2(600, 25)
 layout_mode = 2
-theme_override_constants/separation = 155
+theme_override_constants/separation = 350
 script = ExtResource("10_s2wwb")
-
-[node name="启动器预设" type="Label" parent="Setting/CenterContainer/VBoxContainer/启动项设置"]
-layout_mode = 2
-theme_override_font_sizes/font_size = 20
-text = "启动项预设"
-
-[node name="MenuButton" type="MenuButton" parent="Setting/CenterContainer/VBoxContainer/启动项设置/启动器预设"]
-custom_minimum_size = Vector2(150, 30)
-layout_mode = 0
-offset_left = 84.0
-offset_top = -3.0
-offset_right = 234.0
-offset_bottom = 28.0
-theme_override_colors/font_outline_color = Color(1, 1, 1, 1)
-theme_override_colors/font_color = Color(0, 0, 0, 1)
-theme_override_font_sizes/font_size = 18
-text = "选择预设...."
 
 [node name="启动项" type="Label" parent="Setting/CenterContainer/VBoxContainer/启动项设置"]
 layout_mode = 2
@@ -321,18 +310,15 @@ theme_override_font_sizes/font_size = 20
 text = "启动项"
 
 [node name="LineEdit" type="LineEdit" parent="Setting/CenterContainer/VBoxContainer/启动项设置/启动项"]
-custom_minimum_size = Vector2(150, 25)
+custom_minimum_size = Vector2(300, 25)
 layout_mode = 0
 offset_left = 64.0
 offset_right = 164.0
 offset_bottom = 28.0
 
-[node name="Save" type="Button" parent="Setting/CenterContainer/VBoxContainer/启动项设置/启动项"]
-layout_mode = 0
-offset_left = 227.0
-offset_right = 311.0
-offset_bottom = 28.0
-text = "保存为预设..."
+[node name="Save" type="Button" parent="Setting/CenterContainer/VBoxContainer/启动项设置"]
+layout_mode = 2
+text = "保存当前启动项..."
 
 [node name="UserSettings" type="HBoxContainer" parent="Setting/CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(600, 50)
@@ -473,6 +459,7 @@ access = 2
 
 [connection signal="pressed" from="Main/VBoxContainer/ServerList" to="." method="_on_server_list_pressed"]
 [connection signal="pressed" from="Main/VBoxContainer/Settings" to="." method="_on_settings_pressed"]
+[connection signal="pressed" from="Main/VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="Main/VBoxContainer/About" to="." method="_on_about_pressed"]
 [connection signal="pressed" from="ServerList/AddServer" to="ServerList/ServerList" method="_on_add_server_pressed"]
 [connection signal="pressed" from="ServerList/F5" to="ServerList/ServerList" method="_on_f_5_pressed"]
