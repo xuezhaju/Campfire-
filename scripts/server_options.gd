@@ -97,52 +97,92 @@ func _on_join_button_pressed():
 func modify_rev_ini(ip: String, port: int):
 	var rev_ini_path = "D:/Counter-Strike Global Offensive/rev.ini"
 	var temp_path = rev_ini_path + ".tmp"
-	var input_file = FileAccess.open(rev_ini_path, FileAccess.READ)
-	var output_file = FileAccess.open(temp_path, FileAccess.WRITE)
 	
-	if input_file and output_file:
-		var current_line = 1
-		var proc_line_found = false
-		
-		while not input_file.eof_reached():
-			var line = input_file.get_line()
-			
-			# 处理第二行（ProcName行）
-			if current_line == 2 and line.begins_with("ProcName="):
-				# 检查是否已经包含connect参数
-				if "+connect" in line:
-					# 替换现有的connect参数
-					var parts = line.split("+connect")
-					line = parts[0] + "+connect %s:%d" % [ip, port]
-				else:
-					# 添加connect参数
-					line = line + " +connect %s:%d" % [ip, port]
-				proc_line_found = true
-			
-			output_file.store_line(line)
-			current_line += 1
-		
+	# 第一次修改：添加connect参数
+	var add_success = _modify_file(rev_ini_path, temp_path, func(line: String, current_line: int):
+		if current_line == 2 and line.begins_with("ProcName="):
+			if "+connect" in line:
+				var parts = line.split("+connect")
+				return parts[0] + "+connect %s:%d" % [ip, port]
+			else:
+				return line + " +connect %s:%d" % [ip, port]
+		return line
+	)
+	
+	if not add_success:
+		printerr("添加connect参数失败")
+		return
+	
+	# 30秒后异步移除connect参数
+	var timer = Timer.new()
+	timer.wait_time = 30.0
+	timer.one_shot = true
+	timer.timeout.connect(func():
+		# 在后台线程执行文件修改
+		_thread_safe_modify(rev_ini_path, temp_path, func(line: String, current_line: int):
+			if current_line == 2 and line.begins_with("ProcName=") and "+connect" in line:
+				return line.split("+connect")[0].strip_edges()
+			return line
+		)
+		timer.queue_free()
+	)
+	add_child(timer)
+	timer.start()
+
+# 线程安全的文件修改
+func _thread_safe_modify(path: String, temp_path: String, modifier: Callable):
+	var thread = Thread.new()
+	thread.start(func():
+		_modify_file(path, temp_path, modifier)
+		thread.wait_to_finish()
+	)
+
+# 通用文件修改函数
+func _modify_file(path: String, temp_path: String, modifier: Callable) -> bool:
+	var input_file = FileAccess.open(path, FileAccess.READ)
+	if not input_file:
+		printerr("无法打开文件: %s" % path)
+		return false
+	
+	var output_file = FileAccess.open(temp_path, FileAccess.WRITE)
+	if not output_file:
 		input_file.close()
-		output_file.close()
-		
-		# 替换原文件
-		var dir = DirAccess.open("D:/Counter-Strike Global Offensive/")
-		if dir:
-			dir.remove("rev.ini")
-			dir.rename("rev.ini.tmp", "rev.ini")
-			print("成功修改rev.ini文件")
-		else:
-			printerr("无法重命名文件")
-		
-		if not proc_line_found:
-			printerr("警告：未找到ProcName行，可能未成功添加连接参数")
-	else:
-		printerr("无法打开rev.ini文件进行修改")
+		printerr("无法创建临时文件: %s" % temp_path)
+		return false
+	
+	var current_line = 1
+	var modified = false
+	
+	while not input_file.eof_reached():
+		var line = input_file.get_line()
+		var new_line = modifier.call(line, current_line)
+		if new_line != line:
+			modified = true
+		output_file.store_line(new_line)
+		current_line += 1
+	
+	input_file.close()
+	output_file.close()
+	
+	var dir = DirAccess.open(path.get_base_dir())
+	if not dir:
+		printerr("无法访问目录")
+		return false
+	
+	if dir.file_exists(path):
+		if dir.remove(path) != OK:
+			printerr("无法删除原文件")
+			return false
+	
+	if dir.rename(temp_path, path) != OK:
+		printerr("无法重命名临时文件")
+		return false
+	
+	return true
 
 
 func launch_csgo():
 	var csgo_path = Global.csgo_path + "/revLoader.exe"
-	print(csgo_path)
 
 	# 检查文件是否存在
 	if FileAccess.file_exists(csgo_path):

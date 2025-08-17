@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://d2sjgx566qaud"]
+[gd_scene load_steps=14 format=3 uid="uid://d2sjgx566qaud"]
 
 [ext_resource type="Script" uid="uid://btfx11kdve23t" path="res://scene/main_ui.gd" id="1_xqdl1"]
 [ext_resource type="Script" uid="uid://bydqjipe8tk7e" path="res://scripts/font_settings.gd" id="2_g4hc0"]
@@ -11,6 +11,7 @@
 [ext_resource type="Script" uid="uid://hxat6no8uaoa" path="res://scripts/music.gd" id="9_eib71"]
 [ext_resource type="Script" uid="uid://2bqhj36e5da5" path="res://scripts/user_settings.gd" id="10_17wiq"]
 [ext_resource type="Script" uid="uid://v4kv8svevl1l" path="res://scripts/cs_go_search.gd" id="10_pdx0a"]
+[ext_resource type="Script" uid="uid://b3htrg7ase386" path="res://scene/启动项设置.gd" id="10_s2wwb"]
 [ext_resource type="Script" uid="uid://c6faonu83n5mt" path="res://scripts/rich_text_label.gd" id="12_m1ovf"]
 
 [node name="MainUI" type="Control"]
@@ -295,6 +296,7 @@ text = "清除"
 custom_minimum_size = Vector2(600, 50)
 layout_mode = 2
 theme_override_constants/separation = 155
+script = ExtResource("10_s2wwb")
 
 [node name="启动器预设" type="Label" parent="Setting/CenterContainer/VBoxContainer/启动项设置"]
 layout_mode = 2
@@ -325,7 +327,7 @@ offset_left = 64.0
 offset_right = 164.0
 offset_bottom = 28.0
 
-[node name="Button" type="Button" parent="Setting/CenterContainer/VBoxContainer/启动项设置/启动项"]
+[node name="Save" type="Button" parent="Setting/CenterContainer/VBoxContainer/启动项设置/启动项"]
 layout_mode = 0
 offset_left = 227.0
 offset_right = 311.0
